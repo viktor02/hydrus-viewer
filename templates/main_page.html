@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydrus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+<div>
+    <form method="POST" class="search" action="{{ url_for('search') }}">
+        <input type="text" id="search-box" name="tags" placeholder="tags like 1girl">
+        <input type="submit" id="search-button" value="Search">
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>View page</title>
+
+    <link
+            href="https://unpkg.com/sanitize.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+</head>
+<body>
+<div class="view-page-grid">
+    <div class="view-page-text">
+        <p>Tags:</p>
+        <ul>
+            {% for tag in tags %}
+            <li><a href="{{ url_for('search', tags=tags) }}"></a>{{ tag }}</li>
+            {% endfor %}
+        </ul>
+        <p>Source:</p>
+        <ul>
+            {% for src in source %}
+            <li><a href="{{src}}">{{src}}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if mime_type.startswith("image") %}
+        <img class="media" src="{{ url_for('get_fullsize', file_id=file_id) }}" alt="Image">
+    {% elif mime_type.startswith("video") %}
+        <video controls class="media">
+            <source src="{{ url_for('get_fullsize', file_id=file_id) }}" type="{{ mime_type }}">
+            Your browser does not support the video tag.
+        </video>
+    {% else %}
+        <p>Unsupported file type</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

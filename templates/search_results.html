@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Grid</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+<div class="images">
+    {% for file_id in file_ids %}
+    <div class="cell">
+        <a href="{{ url_for('view_full', file_id=file_id) }}">
+            <img src="{{ url_for('get_thumbnail', file_id=file_id) }}" alt="thumbnail" loading="lazy">
+        </a>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
