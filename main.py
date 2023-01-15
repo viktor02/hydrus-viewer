@@ -13,7 +13,7 @@ args = parser.parse_args()
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
-logging.getLogger("werkzeug").setLevel(logging.CRITICAL)
+logging.getLogger("werkzeug").setLevel(logging.ERROR)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -27,13 +27,14 @@ def index():
 
 
 @app.route("/search", methods=["POST"])
-def search():
+@app.route("/search/<int:page>", methods=["POST"])
+def search(page=1):
     query = request.form["tags"]
 
     logger.info(f"Query: {query}")
 
-    results = hydrus.search_tag(query)
-    return render_template("search_results.html", file_ids=results)
+    results = hydrus.get_page(query, page)
+    return render_template("search_results.html", file_ids=results, query=query, current_page=page)
 
 
 @app.route("/thumb/<int:file_id>")
@@ -64,4 +65,5 @@ def get_fullsize(file_id):
     return send_file(io.BytesIO(image), mimetype=mimetype)
 
 
+logger.info(f"Server starting on {args.bind}:{args.port}")
 app.run(host=args.bind, port=args.port)
