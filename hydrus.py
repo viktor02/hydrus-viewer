@@ -8,10 +8,12 @@ class Hydrus:
         self.client = hydrus_api.Client(access_key=access_key)
         self.logger = logging.getLogger(__name__)
 
-    def get_page(self, query, number):
+    def get_page(self, query, number, only_archived=True):
         tags = query.split(" ")
         self.logger.info(f"Searching page {number} by tags: {tags}")
-        file_ids = self.client.search_files(tags)
+        if only_archived:
+            tags.append("system:archive")
+        file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.RANDOM)
 
         # set the current page number and the number of results per page
         page = number

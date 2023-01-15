@@ -1,6 +1,6 @@
 import io
 
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, abort
 from hydrus import Hydrus
 import argparse
 import logging
@@ -42,18 +42,28 @@ def get_thumbnail(file_id):
     return hydrus.get_thumbnail(file_id)
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html', title='404'), 404
+
+
 @app.route("/view/<int:file_id>")
 def view_full(file_id):
-    metadata = hydrus.get_metadata(file_id)
-    tags = set()
-    for service in metadata["tags"]:
-        tags = metadata["tags"][service]["display_tags"]['0']
-        break
+    try:
+        metadata = hydrus.get_metadata(file_id)
+        tags = set()
+        for service in metadata["tags"]:
+            tags = metadata["tags"][service]["display_tags"]['0']
+            break
 
-    source = metadata["known_urls"]
-    mimetype = metadata["mime"]
+        source = metadata["known_urls"]
+        mimetype = metadata["mime"]
+        img_hash = metadata["hash"]
 
-    return render_template("view_page.html", file_id=file_id, tags=tags, source=source, mime_type=mimetype)
+        return render_template("view_page.html", file_id=file_id, tags=tags, source=source, mime_type=mimetype,
+                               img_hash=img_hash)
+    except KeyError:
+        return abort(404)
 
 
 @app.route("/get_fullsize/<int:file_id>")

@@ -12,7 +12,7 @@
 <div class="container">
     <div class="row text-center text-lg-start">
         {% for file_id in file_ids %}
-        <div class="col-lg-3 col-md-4 col-6">
+        <div class="col-lg-2 col-md-4 col-sm-8">
             <a href="{{ url_for('view_full', file_id=file_id) }}">
                 <img src="{{ url_for('get_thumbnail', file_id=file_id) }}" class="img-fluid img-thumbnail"
                      alt="thumbnail" loading="lazy">
