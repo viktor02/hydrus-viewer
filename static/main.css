@@ -10,7 +10,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+
 }
 #search-box {
     width: 500px;
@@ -21,6 +21,10 @@ body {
     width: 100px;
     height: 50px;
     font-size: 20px;
+}
+
+#logo {
+    text-align: center;
 }
 
 /* ========== PAGE WITH RESULTS ============ */
@@ -69,7 +73,7 @@ body {
 }
 
 /* Text cell */
-.view-page-grid .text {
+.view-page-text {
   padding: 20px;
 }
 

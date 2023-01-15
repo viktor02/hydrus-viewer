@@ -7,7 +7,7 @@ class Hydrus:
     def __init__(self, access_key: str):
         self.client = hydrus_api.Client(access_key=access_key)
         self.chunk_size = 100
-        self.logger = logging.getLogger()
+        self.logger = logging.getLogger(__name__)
 
     def search_tag(self, query):
         tags = query.split(" ")
@@ -15,7 +15,7 @@ class Hydrus:
         result = self.client.search_files(tags)
         return result
 
-    def load_thumbnail(self, file_id):
+    def get_thumbnail(self, file_id):
         thumb = self.client.get_thumbnail(file_id=file_id)
         return thumb.content
 

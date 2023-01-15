@@ -5,7 +5,6 @@ from hydrus import Hydrus
 import argparse
 import logging
 
-
 parser = argparse.ArgumentParser(prog='HydrusViewer')
 parser.add_argument('access_key')
 parser.add_argument('--bind', default="127.0.0.1")
@@ -13,7 +12,11 @@ parser.add_argument('--port', default=8020)
 args = parser.parse_args()
 
 app = Flask(__name__)
-app.logger = None
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("werkzeug").setLevel(logging.CRITICAL)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 hydrus = Hydrus(args.access_key)
 
 
@@ -27,7 +30,7 @@ def index():
 def search():
     query = request.form["tags"]
 
-    logging.info(f"Query: {query}")
+    logger.info(f"Query: {query}")
 
     results = hydrus.search_tag(query)
     return render_template("search_results.html", file_ids=results)
@@ -35,7 +38,7 @@ def search():
 
 @app.route("/thumb/<int:file_id>")
 def get_thumbnail(file_id):
-    return hydrus.load_thumbnail(file_id)
+    return hydrus.get_thumbnail(file_id)
 
 
 @app.route("/view/<int:file_id>")
