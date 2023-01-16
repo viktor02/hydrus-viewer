@@ -6,9 +6,11 @@ from flask import Flask, render_template, request, send_file, abort
 
 from .hydrus import Hydrus
 
+__VERSION__ = "0.1.0"
+
 app = Flask(__name__)
 
-parser = argparse.ArgumentParser(prog='HydrusViewer')
+parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
 parser.add_argument('--bind', default="127.0.0.1")
 parser.add_argument('--port', default=8020)
@@ -84,5 +86,10 @@ def page_not_found(error):
     return render_template('404.html', title='404'), 404
 
 
-logger.info(f"Server starting on {args.bind}:{args.port}")
-app.run(host=args.bind, port=args.port)
+def main():
+    logger.info(f"Server starting on {args.bind}:{args.port}")
+    app.run(host=args.bind, port=args.port)
+
+
+if __name__ == "__main__":
+    main()
