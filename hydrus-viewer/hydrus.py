@@ -1,12 +1,20 @@
+import sys
+
 import hydrus_api
 import hydrus_api.utils
 import logging
+
+REQUIRED_PERMISSIONS = {hydrus_api.Permission.SEARCH_FILES}
 
 
 class Hydrus:
     def __init__(self, access_key: str):
         self.client = hydrus_api.Client(access_key=access_key)
         self.logger = logging.getLogger(__name__)
+
+        if not hydrus_api.utils.verify_permissions(self.client, REQUIRED_PERMISSIONS):
+            self.logger.error("The API key does not grant all required permissions:", REQUIRED_PERMISSIONS)
+            sys.exit(-1)
 
     def get_page(self, query, number, only_archived=True):
         tags = query.split(" ")
@@ -37,5 +45,8 @@ class Hydrus:
         return full.content
 
     def get_metadata(self, file_id):
-        metadata = self.client.get_file_metadata(file_ids=[file_id])[0]
-        return metadata
+        try:
+            metadata = self.client.get_file_metadata(file_ids=[file_id])[0]
+            return metadata
+        except hydrus_api.APIError:
+            return None

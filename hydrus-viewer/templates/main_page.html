@@ -17,7 +17,7 @@
                 <img src="{{ url_for('static', filename='favicon.png')}}" class="mx-auto d-block img-fluid" alt="Logo">
             </div>
             <div class="col-12">
-                <form method="POST" class="search" action="{{ url_for('search') }}">
+                <form method="POST" class="search" action="{{ url_for('search', page=1) }}">
                     <div class="input-group d-flex justify-content-center">
                         <input type="text" name="tags" class="form-control" placeholder="Search tags like 1girl">
                         <button type="submit" class="btn btn-primary">Search</button>

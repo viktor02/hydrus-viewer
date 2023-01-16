@@ -33,7 +33,7 @@
                 <p>Unsupported file type</p>
             {% endif %}
         </div>
-        <div class="col-md-3 order-lg-3">
+        <div class="col-md-3 order-lg-3 text-wrap">
             <h4>Sources:</h4>
             {% if source is defined %}
                 <ul class="list-unstyled">
@@ -42,7 +42,8 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-            <p>Hash: {{ img_hash }}</p>
+            <h4>Hash: </h4>
+            {{ img_hash }}
         </div>
     </div>
 </div>
