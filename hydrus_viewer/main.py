@@ -2,11 +2,12 @@ import argparse
 import logging
 import io
 
+import flask
 from flask import Flask, render_template, request, send_file, abort
+import importlib.metadata
+
 
 from .hydrus import Hydrus
-
-__VERSION__ = "0.1.0"
 
 app = Flask(__name__)
 
@@ -14,6 +15,7 @@ parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
 parser.add_argument('--bind', default="127.0.0.1")
 parser.add_argument('--port', default=8020)
+parser.add_argument('-v', '--version', action='version', version=importlib.metadata.version("hydrus_viewer"))
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.INFO)
@@ -30,10 +32,13 @@ def index():
     return render_template("main_page.html")
 
 
-@app.route("/search/<int:page>", methods=["POST"])
+@app.route("/search/<int:page>", methods=["POST", "GET"])
 def search(page=1):
     """ page with found content """
-    query = request.form["tags"]
+    if flask.request.method == 'POST':
+        query = request.form["tags"]
+    else:
+        query = request.args.get('tags')
 
     logger.info(f"Query: {query}")
 

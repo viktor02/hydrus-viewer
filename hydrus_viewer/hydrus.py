@@ -17,7 +17,9 @@ class Hydrus:
             sys.exit(-1)
 
     def get_page(self, query, number, only_archived=True):
-        tags = query.split(" ")
+        tags = query.split(",")
+        tags = [i.strip() for i in tags]
+
         self.logger.info(f"Searching page {number} by tags: {tags}")
         if only_archived:
             tags.append("system:archive")
