@@ -19,7 +19,7 @@
             <div class="col-12">
                 <form method="POST" class="search" action="{{ url_for('search', page=1) }}">
                     <div class="input-group d-flex justify-content-center">
-                        <input type="text" name="tags" class="form-control" placeholder="Search tags like 1girl. The separator is a comma">
+                        <input type="text" required name="tags" class="form-control" placeholder="Search tags like 1girl. The separator is a comma">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </form>

@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row text-center text-lg-start">
         {% for file_id in file_ids %}
-        <div class="col-lg-2 col-md-4 col-sm-8">
+        <div class="col-lg-2 col-md-4 col-sm-4 col-xs-1">
             <a href="{{ url_for('view_full', file_id=file_id) }}">
                 <img src="{{ url_for('get_thumbnail', file_id=file_id) }}" class="img-fluid img-thumbnail"
                      alt="thumbnail" loading="lazy">
@@ -22,10 +22,12 @@
         {% endfor %}
     </div>
     <div class="input-group d-flex justify-content-center">
+        {% if current_page > 1 %}
         <form action="/search/{{ current_page-1 }}" method="POST">
             <input type="hidden" name="tags" value="{{ query }}">
             <input type="submit" value="Previous" class="btn btn-link">
         </form>
+        {% endif %}
         <button class="btn btn-link">{{current_page}}</button>
         <form action="/search/{{ current_page+1 }}" method="POST">
             <input type="hidden" name="tags" value="{{ query }}">

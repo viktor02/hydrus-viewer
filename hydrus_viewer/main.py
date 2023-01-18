@@ -40,6 +40,9 @@ def search(page=1):
     else:
         query = request.args.get('tags')
 
+    if query is "":
+        abort(404)
+
     logger.info(f"Query: {query}")
 
     results = hydrus.get_page(query, page)
@@ -60,12 +63,7 @@ def view_full(file_id):
             tags = metadata["tags"][service]["display_tags"]['0']
             break
 
-        source = metadata["known_urls"]
-        mimetype = metadata["mime"]
-        img_hash = metadata["hash"]
-
-        return render_template("view_page.html", file_id=file_id, tags=tags, source=source, mime_type=mimetype,
-                               img_hash=img_hash)
+        return render_template("view_page.html", file_id=file_id, tags=tags, metadata=metadata)
     except KeyError:
         return abort(404)
 
@@ -76,7 +74,7 @@ def get_thumbnail(file_id):
     return hydrus.get_thumbnail(file_id)
 
 
-@app.route("/get_fullsize/<int:file_id>")
+@app.route("/full/<int:file_id>")
 def get_fullsize(file_id):
     """ returns full-sized images """
     image = hydrus.full_size(file_id)
