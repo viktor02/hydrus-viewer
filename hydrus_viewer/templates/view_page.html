@@ -16,7 +16,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3 order-lg-1">
-            <h4>Tags:</h4>
+            <b>Tags:</b>
             <ul class="list-unstyled">
                 {% for tag in tags %}
                 <li><a href="{{ url_for('search', page=1, tags=tag) }}">{{ tag }}</a></li>
@@ -38,7 +38,7 @@
         </div>
         <div class="col-md-3 order-lg-3 text-wrap text-break">
             <dl>
-                {% if metadata["known_urls"] is defined %}
+                {% if metadata["known_urls"]|length > 0 %}
                     <dt>Sources</dt>
                     {% for src in metadata["known_urls"] %}
                     <dd><a href="{{src}}">{{src}}</a></dd>
@@ -56,31 +56,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <script>
-        function colorTags() {
-            // get the list of tags
-            const tagList = document.querySelectorAll("ul li a");
-            var tagsArray = [];
-            // Create a dictionary for the tag color mapping
-            const tagColors = {
-                creator: "blue",
-                meta: "green",
-                character: "purple",
-                default: "black"
-            }
-
-            // iterate over the tags and check if it has a colon
-            tagList.forEach(tag => {
-                if (tag.textContent.includes(":")) {
-                    var leftWord = tag.textContent.split(":")[0];
-                    // Retrieve color from the dictionary and apply it to the tag
-                    tag.style.color = tagColors[leftWord] || tagColors.default;
-
-                    tagsArray.push(tag);
-                }
-            });
+    function colorTags() {
+        // get the list of tags
+        const tagList = document.querySelectorAll("ul li a");
+        var tagsArray = [];
+        // Create a dictionary for the tag color mapping
+        const tagColors = {
+            creator: "blue",
+            meta: "green",
+            character: "purple",
+            default: "black"
         }
-        document.addEventListener("DOMContentLoaded", colorTags);
 
+        // iterate over the tags and check if it has a colon
+        tagList.forEach(tag => {
+            if (tag.textContent.includes(":")) {
+                var leftWord = tag.textContent.split(":")[0];
+                // Retrieve color from the dictionary and apply it to the tag
+                tag.style.color = tagColors[leftWord] || tagColors.default;
+
+                tagsArray.push(tag);
+            }
+        });
+    }
+    document.addEventListener("DOMContentLoaded", colorTags);
     </script>
 </div>
 

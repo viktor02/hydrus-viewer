@@ -46,6 +46,9 @@ class Hydrus:
         full = self.client.get_file(file_id=file_id)
         return full.content
 
+    def search_tags(self, tag):
+        return self.client.search_tags(tag)
+
     def get_metadata(self, file_id):
         try:
             metadata = self.client.get_file_metadata(file_ids=[file_id])[0]

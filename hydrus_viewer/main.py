@@ -3,7 +3,7 @@ import logging
 import io
 
 import flask
-from flask import Flask, render_template, request, send_file, abort
+from flask import Flask, render_template, request, send_file, abort, jsonify
 import importlib.metadata
 
 
@@ -40,7 +40,7 @@ def search(page=1):
     else:
         query = request.args.get('tags')
 
-    if query is "":
+    if query == "":
         abort(404)
 
     logger.info(f"Query: {query}")
@@ -83,6 +83,12 @@ def get_fullsize(file_id):
 
     return send_file(io.BytesIO(image), mimetype=mimetype)
 
+
+@app.route("/predict_tag")
+def predict_tag():
+    query = request.args.get('q')
+    suggestions = hydrus.search_tags(query)
+    return jsonify(suggestions)
 
 @app.errorhandler(404)
 def page_not_found(error):
