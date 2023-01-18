@@ -87,7 +87,8 @@ def get_fullsize(file_id):
 @app.route("/predict_tag")
 def predict_tag():
     query = request.args.get('q')
-    suggestions = hydrus.search_tags(query)
+    last_tag = query.split(',')[-1]
+    suggestions = hydrus.search_tags(last_tag)
     return jsonify(suggestions)
 
 @app.errorhandler(404)
