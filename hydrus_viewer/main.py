@@ -6,7 +6,6 @@ import flask
 from flask import Flask, render_template, request, send_file, abort, jsonify
 import importlib.metadata
 
-
 from .hydrus import Hydrus
 
 app = Flask(__name__)
@@ -71,7 +70,9 @@ def view_full(file_id):
 @app.route("/thumb/<int:file_id>")
 def get_thumbnail(file_id):
     """ returns thumbnails """
-    return hydrus.get_thumbnail(file_id)
+    image = hydrus.get_thumbnail(file_id)
+
+    return send_file(io.BytesIO(image), mimetype="image/jpeg")
 
 
 @app.route("/full/<int:file_id>")
@@ -90,6 +91,7 @@ def predict_tag():
     last_tag = query.split(',')[-1]
     suggestions = hydrus.search_tags(last_tag)
     return jsonify(suggestions)
+
 
 @app.errorhandler(404)
 def page_not_found(error):
