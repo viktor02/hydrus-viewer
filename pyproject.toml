@@ -9,10 +9,11 @@ authors = [
     {name = "Viktor Karpov", email = "v@vitka-k.ru"},
 ]
 description = "Hydrus Viewer is a simple booru clone"
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.6"
 keywords = ["hydrusnetwork", "hydrus-network", "booru"]
 license = {text = "MIT"}
+long_description_content_type='text/markdown'
 classifiers = [
     "Framework :: Flask",
     "Programming Language :: Python :: 3",
