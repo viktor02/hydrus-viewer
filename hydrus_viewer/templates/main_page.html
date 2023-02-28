@@ -17,7 +17,7 @@
                 <h1 class="mx-auto d-block text-center mt-5 mb-5">HydrusViewer</h1>
             </div>
             <div class="col-12">
-                <form method="POST" class="search" action="{{ url_for('search', page=1) }}">
+                <form method="POST" class="search" action="{{ url_for('search', page=1) }}" autocomplete="off">
                     <div class="input-group d-flex justify-content-center">
                         <input type="text" required name="tags" id="search-input" class="form-control"
                                placeholder="Search tags like 1girl. The separator is a comma">

@@ -24,7 +24,6 @@ function searchTips(searchValue) {
                 const li = document.createElement('li');
                 li.innerText = `${result.value} (${result.count})`;
                 li.addEventListener("click", function () {
-                    /* BUG: adding only last word */
                     // Get the value of the li element
                     const liValue = result.value;
                     //get the current value of input

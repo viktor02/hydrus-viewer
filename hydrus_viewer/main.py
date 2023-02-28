@@ -43,9 +43,11 @@ def search(page=1):
         abort(404)
 
     logger.info(f"Query: {query}")
-
-    results = hydrus.get_page(query, page)
-    return render_template("search_results.html", file_ids=results, query=query, current_page=page)
+    try:
+        results = hydrus.get_page(query, page)
+        return render_template("search_results.html", file_ids=results, query=query, current_page=page)
+    except:
+        abort(404)
 
 
 @app.route("/view/<int:file_id>")
