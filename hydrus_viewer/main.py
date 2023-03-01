@@ -28,6 +28,7 @@ try:
 except hydrus_api.ConnectionError:
     logger.error("Can't connect to Hydrus and verify key")
 
+
 @app.route('/')
 def index():
     """ main search page """
