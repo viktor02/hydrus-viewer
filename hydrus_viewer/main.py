@@ -3,6 +3,7 @@ import logging
 import io
 
 import flask
+import hydrus_api
 from flask import Flask, render_template, request, send_file, abort, jsonify
 import importlib.metadata
 
@@ -22,8 +23,10 @@ logging.getLogger("werkzeug").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-hydrus = Hydrus(args.access_key)
-
+try:
+    hydrus = Hydrus(args.access_key)
+except hydrus_api.ConnectionError:
+    logger.error("Can't connect to Hydrus and verify key")
 
 @app.route('/')
 def index():
