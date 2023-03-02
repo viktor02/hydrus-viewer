@@ -18,7 +18,7 @@ parser.add_argument('--port', default=8020)
 parser.add_argument('-v', '--version', action='version', version=importlib.metadata.version("hydrus_viewer"))
 args = parser.parse_args()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="[%(asctime)s %(levelname)s] %(message)s")
 logging.getLogger("werkzeug").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -46,7 +46,7 @@ def search(page=1):
     if query == "":
         abort(404)
 
-    logger.info(f"Query: {query}")
+    logger.info(f"{request.remote_addr} search: {query}")
     try:
         results = hydrus.get_page(query, page)
         return render_template("search_results.html", file_ids=results, query=query, current_page=page)
@@ -84,9 +84,12 @@ def get_thumbnail(file_id):
 @app.route("/full/<int:file_id>")
 def get_fullsize(file_id):
     """ returns full-sized images """
-    image = hydrus.full_size(file_id)
-    metadata = hydrus.get_metadata(file_id)
-    mimetype = metadata["mime"]
+    try:
+        image = hydrus.full_size(file_id)
+        metadata = hydrus.get_metadata(file_id)
+        mimetype = metadata["mime"]
+    except hydrus_api.APIError:
+        abort(404)
 
     return send_file(io.BytesIO(image), mimetype=mimetype)
 

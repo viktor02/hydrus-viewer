@@ -20,7 +20,7 @@ class Hydrus:
         tags = query.split(",")
         tags = [i.strip() for i in tags]
 
-        self.logger.info(f"Searching page {number} by tags: {tags}")
+        self.logger.debug(f"Searching page {number} by tags: {tags}")
         if only_archived:
             tags.append("system:archive")
         file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.RANDOM)
