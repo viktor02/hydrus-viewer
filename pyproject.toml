@@ -22,6 +22,9 @@ dependencies = [
     'hydrus-api',
 ]
 
+[tool.setuptools]
+packages = ["hydrus_viewer"]
+
 [metadata]
 content-type = "text/markdown"
 
