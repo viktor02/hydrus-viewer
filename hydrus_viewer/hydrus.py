@@ -24,6 +24,7 @@ class Hydrus:
         if only_archived:
             tags.append("system:archive")
         file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.RANDOM)
+        self.logger.debug(f"Count of images: {len(file_ids)}")
 
         # set the current page number and the number of results per page
         page = number

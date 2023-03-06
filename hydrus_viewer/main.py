@@ -15,13 +15,18 @@ parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
 parser.add_argument('--bind', default="127.0.0.1")
 parser.add_argument('--port', default=8020)
+parser.add_argument("--debug", default=False, action="store_true", help="print debug information")
 parser.add_argument('-v', '--version', action='version', version=importlib.metadata.version("hydrus_viewer"))
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s %(levelname)s] %(message)s")
 logging.getLogger("werkzeug").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+
+if args.debug:
+    logging.root.setLevel(logging.DEBUG)
+else:
+    logging.root.setLevel(logging.INFO)
 
 try:
     hydrus = Hydrus(args.access_key)
@@ -44,14 +49,15 @@ def search(page=1):
         query = request.args.get('tags')
 
     if query == "":
-        abort(404)
+        abort(403)
 
     logger.info(f"{request.remote_addr} search: {query}")
     try:
         results = hydrus.get_page(query, page)
         return render_template("search_results.html", file_ids=results, query=query, current_page=page)
-    except:
-        abort(404)
+    except Exception as e:
+        logger.error(e)
+        abort(500)
 
 
 @app.route("/view/<int:file_id>")
@@ -88,10 +94,9 @@ def get_fullsize(file_id):
         image = hydrus.full_size(file_id)
         metadata = hydrus.get_metadata(file_id)
         mimetype = metadata["mime"]
+        return send_file(io.BytesIO(image), mimetype=mimetype)
     except hydrus_api.APIError:
         abort(404)
-
-    return send_file(io.BytesIO(image), mimetype=mimetype)
 
 
 @app.route("/predict_tag")
@@ -102,9 +107,19 @@ def predict_tag():
     return jsonify(suggestions)
 
 
+@app.errorhandler(403)
+def page_not_found(error):
+    return render_template('403.html', title='403'), 403
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html', title='404'), 404
+
+
+@app.errorhandler(500)
+def page_not_found(error):
+    return render_template('500.html', title='500'), 500
 
 
 def main():
