@@ -18,4 +18,5 @@ Build from sources:
 
 ## How it looks
 
-![asas](hydrus_viewer/img/main_page.png)
+![MainPage](img/main_page.png)
+![SearchPage](img/search_page.png)

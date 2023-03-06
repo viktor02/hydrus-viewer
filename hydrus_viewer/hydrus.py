@@ -17,6 +17,8 @@ class Hydrus:
             sys.exit(-1)
 
     def get_page(self, query, number, only_archived=True):
+        if query is None:
+            return []
         tags = query.split(",")
         tags = [i.strip() for i in tags]
 
