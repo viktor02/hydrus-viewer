@@ -1,5 +1,16 @@
 # Hydrus Viewer
 
+## Why
+
+There are several reasons for this:
+
+- I don't need to set up CORS, it just works.
+
+- Easy installation if you have python.
+
+- Can be run on anything
+
+- I can.
 
 ## How to install
 

@@ -10,13 +10,14 @@ import importlib.metadata
 from .hydrus import Hydrus
 
 app = Flask(__name__)
+version = importlib.metadata.version("hydrus_viewer")
 
 parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
 parser.add_argument('--bind', default="127.0.0.1")
 parser.add_argument('--port', default=8020)
 parser.add_argument("--debug", default=False, action="store_true", help="print debug information")
-parser.add_argument('-v', '--version', action='version', version=importlib.metadata.version("hydrus_viewer"))
+parser.add_argument('-v', '--version', action='version', version=version)
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s %(levelname)s] %(message)s")
@@ -37,7 +38,7 @@ except hydrus_api.ConnectionError:
 @app.route('/')
 def index():
     """ main search page """
-    return render_template("main_page.html")
+    return render_template("main_page.html", version=version)
 
 
 @app.route("/search/<int:page>", methods=["POST", "GET"])
