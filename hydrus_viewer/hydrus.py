@@ -25,7 +25,8 @@ class Hydrus:
         self.logger.debug(f"Searching page {number} by tags: {tags}")
         if only_archived:
             tags.append("system:archive")
-        file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.RANDOM)
+        file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.IMPORT_TIME)
+        file_ids = file_ids['file_ids']
         self.logger.debug(f"Count of images: {len(file_ids)}")
 
         # set the current page number and the number of results per page
@@ -51,11 +52,12 @@ class Hydrus:
 
     def search_tags(self, tag):
         tags = self.client.search_tags(tag)
-        return tags[-5:] # returns last 5 tags
+        return tags[-5:]  # returns last 5 tags
 
     def get_metadata(self, file_id):
         try:
-            metadata = self.client.get_file_metadata(file_ids=[file_id])[0]
-            return metadata
-        except hydrus_api.APIError:
+            metadata = self.client.get_file_metadata(file_ids=[file_id])
+            return metadata['metadata'][0]
+        except hydrus_api.APIError as e:
+            self.logger.error(e)
             return None
