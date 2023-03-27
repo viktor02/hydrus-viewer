@@ -51,7 +51,8 @@ class Hydrus:
         return full.content
 
     def search_tags(self, tag):
-        tags = self.client.search_tags(tag)
+        tags = self.client.search_tags(tag, None)
+        tags = tags['tags']
         return tags[-5:]  # returns last 5 tags
 
     def get_metadata(self, file_id):
