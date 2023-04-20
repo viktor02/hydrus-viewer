@@ -29,6 +29,12 @@ Build from sources:
 
     `pip install .`
 
+4. Run
+
+    `hydrus_viewer <access_key>`
+
+5. App will start at 127.0.0.1:8020 (you can change IP and Port with --bind and --port args)
+
 ## How it looks
 
 ![MainPage](img/main_page.png)
