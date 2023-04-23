@@ -1,6 +1,7 @@
 import argparse
 import logging
 import io
+import sys
 
 import flask
 import hydrus_api
@@ -33,6 +34,7 @@ try:
     hydrus = Hydrus(args.access_key)
 except hydrus_api.ConnectionError:
     logger.error("Can't connect to Hydrus and verify key")
+    sys.exit(1)
 
 
 @app.route('/')
@@ -102,11 +104,14 @@ def get_fullsize(file_id):
 
 @app.route("/predict_tag")
 def predict_tag():
-    query = request.args.get('q')
-    last_tag = query.split(',')[-1]
-    suggestions = hydrus.search_tags(last_tag)
-    return jsonify(suggestions)
-
+    try:
+        query = request.args.get('q')
+        last_tag = query.split(',')[-1]
+        suggestions = hydrus.search_tags(last_tag)
+        return jsonify(suggestions)
+    except Exception as e:
+        logger.error(f"Error while predicting tag: {e}")
+        abort(500)
 
 @app.errorhandler(403)
 def page_not_found(error):
