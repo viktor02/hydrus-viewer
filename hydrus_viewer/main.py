@@ -1,7 +1,7 @@
 import argparse
 import logging
 import io
-import sys
+from time import sleep
 
 import flask
 import hydrus_api
@@ -30,11 +30,13 @@ if args.debug:
 else:
     logging.root.setLevel(logging.INFO)
 
-try:
-    hydrus = Hydrus(args.access_key)
-except hydrus_api.ConnectionError:
-    logger.error("Can't connect to Hydrus and verify key")
-    sys.exit(1)
+while True:
+    try:
+        hydrus = Hydrus(args.access_key)
+        break
+    except hydrus_api.ConnectionError:
+        logger.error("Can't connect to Hydrus and verify key")
+        sleep(60)
 
 
 @app.route('/')
