@@ -28,7 +28,7 @@
             {% if metadata["mime"].startswith("image") %}
             <img class="figure-img img-fluid" src="{{ url_for('get_fullsize', file_id=file_id) }}" alt="Image">
             {% elif metadata["mime"].startswith("video") %}
-            <video controls class="figure-img img-fluid">
+            <video controls loop class="figure-img img-fluid">
                 <source src="{{ url_for('get_fullsize', file_id=file_id) }}" type="{{ metadata['mime'] }}">
                 Your browser does not support the video tag.
             </video>
