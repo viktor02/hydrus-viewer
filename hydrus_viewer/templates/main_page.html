@@ -8,8 +8,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.8/photoswipe.min.css" integrity="sha512-LFWtdAXHQuwUGH9cImO9blA3a3GfQNkpF2uRlhaOpSbDevNyK1rmAjs13mtpjvWyi+flP7zYWboqY+8Mkd42xA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 <body>
+{% include "header.html" %}
 <div>
     <div class="container">
         <div class="row">
@@ -24,8 +27,19 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </form>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    {% for file_id in file_ids %}
+                    <div class="col-lg-2 col-md-4 col-sm-4 col-5">
+                        <a href="{{ url_for('view_full', file_id=file_id) }}">
+                            <img src="{{ url_for('get_thumbnail', file_id=file_id) }}" class="img-thumbnail object-fit-cover mt-3"
+                                 alt="thumbnail" loading="lazy" style="width: 125px; height: 150px">
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
 
-                <ul id="search-results"></ul>
             </div>
         </div>
     </div>
@@ -35,7 +49,6 @@
         <span class="text-muted"><a class="text-muted text-decoration-none" href="https://github.com/viktor02/hydrus-viewer">hydrus-viewer</a> v{{ version }}</span>
       </div>
     </footer>
-
 </div>
 
 </body>

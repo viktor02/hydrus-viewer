@@ -10,12 +10,17 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">Home</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('import_page') }}">Import</a>
+                </li>
             </ul>
+            {% if not no_search_field %}
             <form class="d-flex" method="POST" action="{{ url_for('search', page=1) }}">
                 <input class="form-control me-2" name="tags" type="search" placeholder="Search" required
                        aria-label="Search" value="{{ query }}">
-                <button class="btn btn-primary" type="submit">Search</button>
+                <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>
+            {% endif %}
         </div>
 
     </div>

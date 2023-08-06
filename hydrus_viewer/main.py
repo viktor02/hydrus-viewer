@@ -11,7 +11,8 @@ import importlib.metadata
 from .hydrus import Hydrus
 
 app = Flask(__name__)
-version = importlib.metadata.version("hydrus_viewer")
+
+version = '0.3.0'
 
 parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
@@ -42,7 +43,8 @@ while True:
 @app.route('/')
 def index():
     """ main search page """
-    return render_template("main_page.html", version=version)
+    random_ids = hydrus.get_random()
+    return render_template("main_page.html", version=version, no_search_field=True, file_ids=random_ids)
 
 
 @app.route("/search/<int:page>", methods=["POST", "GET"])
@@ -75,9 +77,12 @@ def view_full(file_id):
             abort(404)
 
         tags = set()
-        for service in metadata["tags"]:
-            tags = metadata["tags"][service]["display_tags"]['0']
-            break
+        if "tags" in metadata:
+            for service in metadata["tags"]:
+                display_tags = metadata["tags"][service]["display_tags"]
+                if len(display_tags) > 0:
+                    tags = display_tags['0']
+                break
 
         return render_template("view_page.html", file_id=file_id, tags=tags, metadata=metadata)
     except KeyError:
@@ -104,6 +109,16 @@ def get_fullsize(file_id):
         abort(404)
 
 
+@app.route("/import", methods=["POST", "GET"])
+def import_page():
+    if flask.request.method == 'POST':
+        url = request.form["url"]
+        import_msg = hydrus.import_url(url)
+        return render_template("import_page.html", import_msg=import_msg)
+    else:
+        return render_template("import_page.html")
+
+
 @app.route("/predict_tag")
 def predict_tag():
     try:
@@ -114,6 +129,7 @@ def predict_tag():
     except Exception as e:
         logger.error(f"Error while predicting tag: {e}")
         abort(500)
+
 
 @app.errorhandler(403)
 def page_not_found(error):

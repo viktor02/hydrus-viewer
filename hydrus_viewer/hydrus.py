@@ -4,7 +4,7 @@ import hydrus_api
 import hydrus_api.utils
 import logging
 
-REQUIRED_PERMISSIONS = {hydrus_api.Permission.SEARCH_FILES}
+REQUIRED_PERMISSIONS = {hydrus_api.Permission.SEARCH_FILES, hydrus_api.Permission.IMPORT_FILES}
 
 
 class Hydrus:
@@ -25,7 +25,8 @@ class Hydrus:
         self.logger.debug(f"Searching page {number} by tags: {tags}")
         if only_archived:
             tags.append("system:archive")
-        file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.IMPORT_TIME)
+        file_ids = self.client.search_files(tags, file_sort_type=hydrus_api.FileSortType.IMPORT_TIME,
+                                            return_file_ids=True)
         file_ids = file_ids['file_ids']
         self.logger.debug(f"Count of images: {len(file_ids)}")
 
@@ -41,6 +42,13 @@ class Hydrus:
         current_page_file_ids = file_ids[start_index:end_index]
 
         return current_page_file_ids
+
+    def get_random(self):
+        file_ids = self.client.search_files(["system:everything"], file_sort_type=hydrus_api.FileSortType.RANDOM)
+        file_ids = file_ids['file_ids']
+
+        limit = 12
+        return file_ids[:limit]
 
     def get_thumbnail(self, file_id):
         thumb = self.client.get_thumbnail(file_id=file_id)
@@ -62,3 +70,11 @@ class Hydrus:
         except hydrus_api.APIError as e:
             self.logger.error(e)
             return None
+
+    def import_url(self, url):
+        try:
+            res = self.client.add_url(url)
+            return res["human_result_text"]
+        except hydrus_api.APIError as e:
+            self.logger.error(e)
+            return str(e)

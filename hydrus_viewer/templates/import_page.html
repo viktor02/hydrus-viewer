@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Import URL</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
+</head>
+<body>
+{% include "header.html" %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 ">
+            <h1 class="mx-auto d-block text-center mt-5 mb-5">Import URL</h1>
+        </div>
+        <div class="col-12">
+            {% if import_msg %}
+            <div class="alert alert-primary" role="alert">
+                {{ import_msg }}
+            </div>
+            {% endif %}
+            <form method="POST" class="search" action="{{ url_for('import_page') }}" autocomplete="off">
+                <div class="input-group d-flex justify-content-center">
+                    <input type="text" required name="url" id="search-input" class="form-control"
+                           placeholder="Import URL">
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+</div>
+</body>
+</html>

@@ -2,15 +2,15 @@
 
 ## Why
 
-There are several reasons for this:
+When I started this project, it seemed to me that there were no good and simple solutions for the hydrus web gallery. Those that were, took time to set up and I didn't like them. So I decided to write my own gallery.
 
-- I don't need to set up CORS, it just works.
+## Features
 
-- Easy installation if you have python.
-
-- Can be run on anything
-
-- I can.
+1. Search the gallery by tags
+2. View images 
+3. Import URLs to hydrus
+4. Optimized for PC and mobile
+5. Simply to install and set up.
 
 ## How to install
 
