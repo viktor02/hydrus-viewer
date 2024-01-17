@@ -8,8 +8,8 @@ REQUIRED_PERMISSIONS = {hydrus_api.Permission.SEARCH_FILES, hydrus_api.Permissio
 
 
 class Hydrus:
-    def __init__(self, access_key: str):
-        self.client = hydrus_api.Client(access_key=access_key)
+    def __init__(self, access_key: str, api_url: str):
+        self.client = hydrus_api.Client(access_key=access_key, api_url=api_url)
         self.logger = logging.getLogger(__name__)
 
         if not hydrus_api.utils.verify_permissions(self.client, REQUIRED_PERMISSIONS):

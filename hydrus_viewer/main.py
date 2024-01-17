@@ -12,12 +12,13 @@ from .hydrus import Hydrus
 
 app = Flask(__name__)
 
-version = '0.3.0'
+version = '0.3.1'
 
 parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
 parser.add_argument('--bind', default="127.0.0.1")
 parser.add_argument('--port', default=8020)
+parser.add_argument('--api_url', default="http://127.0.0.1:45869/")
 parser.add_argument("--debug", default=False, action="store_true", help="print debug information")
 parser.add_argument('-v', '--version', action='version', version=version)
 args = parser.parse_args()
@@ -33,7 +34,7 @@ else:
 
 while True:
     try:
-        hydrus = Hydrus(args.access_key)
+        hydrus = Hydrus(args.access_key, args.api_url)
         break
     except hydrus_api.ConnectionError:
         logger.error("Can't connect to Hydrus and verify key")
