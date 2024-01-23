@@ -15,7 +15,7 @@ When I started this project, it seemed to me that there were no good and simple 
 ## How to install
 
 
-Build from sources:
+### Build from sources:
 
 1. Clone the repository 
 
@@ -34,6 +34,51 @@ Build from sources:
     `hydrus_viewer <access_key>`
 
 5. App will start at 127.0.0.1:8020 (you can change IP and Port with --bind and --port args)
+
+### Docker
+
+1. Clone git repo
+
+   `git clone https://github.com/viktor02/hydrus-viewer`
+
+2. Build with docker:
+
+   `docker build -t hydrus_viewer ./hydrus_viewer`
+
+3. Start containers
+
+Using docker-compose:
+```yaml
+version: '3.8'
+services:
+  hydrusclient:
+    image: ghcr.io/hydrusnetwork/hydrus:latest
+    container_name: hydrusclient
+    restart: unless-stopped
+    environment:
+      - UID=1000
+      - GID=1000
+    volumes:
+      - ./db:/opt/hydrus/db
+    tmpfs:
+      - /tmp #optional for SPEEEEEEEEEEEEEEEEEEEEEEEEED and less disk access
+    ports:
+      - 5800:5800   #noVNC
+      - 5900:5900   #VNC
+      - 45868:45868 #Booru
+      - 45869:45869 #API
+  hydrus_viewer:
+    image: hydrus_viewer
+    container_name: hydrus_viewer
+    restart: unless-stopped
+    environment:
+      - TOKEN=secrettokenforapi
+      - API_URL=http://hydrusclient:45869/
+      - BIND=0.0.0.0
+      - PORT=80
+    ports:
+      - 80:80
+```
 
 ## How it looks
 
