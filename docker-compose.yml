@@ -1,0 +1,7 @@
+services:
+  hydrus-viewer:
+    build: .
+    ports:
+      - "8020:8020"
+    env_file: .env
+    restart: always

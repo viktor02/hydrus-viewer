@@ -12,7 +12,7 @@ from .hydrus import Hydrus
 
 app = Flask(__name__)
 
-version = '0.3.1'
+version = '0.4.0'
 
 parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
@@ -35,10 +35,13 @@ else:
 while True:
     try:
         hydrus = Hydrus(args.access_key, args.api_url)
+
+        tags_cloud = hydrus.get_tags_list()
+
         break
     except hydrus_api.ConnectionError:
         logger.error("Can't connect to Hydrus and verify key")
-        sleep(60)
+        sleep(10)
 
 
 @app.route('/')
@@ -71,23 +74,25 @@ def search(page=1):
 @app.route("/view/<int:file_id>")
 def view_full(file_id):
     """ page with viewing full-sized content"""
+    metadata = hydrus.get_metadata(file_id)
+
+    if metadata is None:
+        logger.error("metadata is none!")
+        abort(404)
+
+    tags = set()
     try:
-        metadata = hydrus.get_metadata(file_id)
-
-        if metadata is None:
-            abort(404)
-
-        tags = set()
         if "tags" in metadata:
             for service in metadata["tags"]:
                 display_tags = metadata["tags"][service]["display_tags"]
                 if len(display_tags) > 0:
                     tags = display_tags['0']
                 break
-
-        return render_template("view_page.html", file_id=file_id, tags=tags, metadata=metadata)
     except KeyError:
-        return abort(404)
+        tags = []
+        logger.error("tags is none!")
+
+    return render_template("view_page.html", file_id=file_id, tags=tags, metadata=metadata)
 
 
 @app.route("/thumb/<int:file_id>")
@@ -107,6 +112,7 @@ def get_fullsize(file_id):
         mimetype = metadata["mime"]
         return send_file(io.BytesIO(image), mimetype=mimetype)
     except hydrus_api.APIError:
+        logger.error("API error while processing {file_id}")
         abort(404)
 
 
@@ -119,6 +125,10 @@ def import_page():
     else:
         return render_template("import_page.html")
 
+@app.route("/tags", methods=["GET"])
+def tags_page():
+    tags = tags_cloud
+    return render_template("tags_page.html", tags=tags)
 
 @app.route("/predict_tag")
 def predict_tag():

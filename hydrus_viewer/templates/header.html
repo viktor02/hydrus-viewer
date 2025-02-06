@@ -13,6 +13,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('import_page') }}">Import</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ url_for('tags_page') }}">All tags</a>
+                </li>
             </ul>
             {% if not no_search_field %}
             <form class="d-flex" method="POST" action="{{ url_for('search', page=1) }}">

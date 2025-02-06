@@ -27,6 +27,7 @@
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </form>
+                <div id="search-results"></div>
             </div>
             <div class="col-12">
                 <div class="row">
@@ -43,13 +44,27 @@
             </div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='main_page.js') }}"></script>
     <footer class="footer fixed-bottom mt-auto py-3 text-center">
       <div class="container">
         <span class="text-muted"><a class="text-muted text-decoration-none" href="https://github.com/viktor02/hydrus-viewer">hydrus-viewer</a> v{{ version }}</span>
       </div>
     </footer>
 </div>
+<script src="{{ url_for('static', filename='functions.js') }}"></script>
+<script>
+    const debouncedSearchTips = debounce(searchTips, 300);
 
+    document.getElementById("search-input").addEventListener("keydown", function (e) {
+        if (e.keyCode !== 13) {
+            var value = document.getElementById('search-input').value;
+            if (value.length < 3) {
+                return false; // keep form
+            } else {
+                debouncedSearchTips(this.value);
+            }
+
+        }
+    });
+</script>
 </body>
 </html>

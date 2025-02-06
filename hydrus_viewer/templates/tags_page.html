@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tags</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png')}}">
+</head>
+<body>
+{% include "header.html" %}
+<div class="container">
+    <div class="row text-center text-lg-start">
+        {% for tag, tag_count in tags %}
+        <div class="col-lg-2 col-md-4 col-sm-4 col-5">
+            <a href="{{ url_for('search', page=1, tags=tag) }}">{{tag}} ({{tag_count}})</a></li>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='functions.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        colorTags("div a");
+    }, false);
+</script>
+</body>
+</html>

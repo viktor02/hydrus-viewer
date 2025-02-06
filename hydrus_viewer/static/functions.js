@@ -1,4 +1,32 @@
+function humanFileSize(size) {
+    // by Andrew V. from SO
+    var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
+function colorTags(querySelector) {
+    // get the list of tags
+    //const tagList = document.querySelectorAll("ul li a");
+    const tagList = document.querySelectorAll(querySelector);
+    var tagsArray = [];
+    // Create a dictionary for the tag color mapping
+    const tagColors = {
+        creator: "blue",
+        meta: "green",
+        character: "purple",
+        default: "black"
+    }
 
+    // iterate over the tags and check if it has a colon
+    tagList.forEach(tag => {
+        if (tag.textContent.includes(":")) {
+            var leftWord = tag.textContent.split(":")[0];
+            // Retrieve color from the dictionary and apply it to the tag
+            tag.style.color = tagColors[leftWord] || tagColors.default;
+
+            tagsArray.push(tag);
+        }
+    });
+}
 
 // Debounce function to limit the number of requests made
 function debounce(fn, delay) {
@@ -46,16 +74,3 @@ function searchTips(searchValue) {
         });
 }
 
-const debouncedSearchTips = debounce(searchTips, 300);
-
-document.getElementById("search-input").addEventListener("keydown", function (e) {
-    if (e.keyCode !== 13) {
-        var value = document.getElementById('search-input').value;
-        if (value.length < 3) {
-            return false; // keep form
-        } else {
-            debouncedSearchTips(this.value);
-        }
-
-    }
-});

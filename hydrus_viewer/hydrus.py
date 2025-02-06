@@ -1,4 +1,5 @@
 import sys
+from collections import Counter
 
 import hydrus_api
 import hydrus_api.utils
@@ -62,6 +63,39 @@ class Hydrus:
         tags = self.client.search_tags(tag, None)
         tags = tags['tags']
         return tags[-5:]  # returns last 5 tags
+
+    def get_tags_list(self):
+        self.logger.info("Starting tags mining")
+        file_ids = self.client.search_files(["system:everything"])
+        self.logger.info("Hydrus returned all file_ids")
+
+        file_ids = file_ids['file_ids']
+
+        metadata = self.client.get_file_metadata(file_ids=file_ids)
+
+        tag_cloud = []
+
+        self.logger.info("Starting iterating through all files...")
+        for file_id in metadata["metadata"]:
+            if "tags" in file_id:
+                for service in file_id["tags"]:
+                    display_tags = file_id["tags"][service]["display_tags"]
+                    if len(display_tags) > 0:
+                        try:
+                            tags = display_tags['0']
+                            tag_cloud += tags
+                        except KeyError:
+                            break
+                    break
+        
+        self.logger.info("Building tag cloud")
+        
+        tag_counts = Counter(tag_cloud)
+        sorted_tags = sorted(tag_counts.items(), key=lambda item: item[1], reverse=True)
+        
+        self.logger.info(f"Got {len(sorted_tags)} tags")
+
+        return sorted_tags
 
     def get_metadata(self, file_id):
         try:
