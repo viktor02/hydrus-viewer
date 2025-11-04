@@ -10,7 +10,7 @@ When I started this project, it seemed to me that there were no good and simple 
 2. View images 
 3. Import URLs to hydrus
 4. Optimized for PC and mobile
-5. Simply to install and set up.
+5. Simply to install and set up (Now with docker!).
 
 ## How to install
 

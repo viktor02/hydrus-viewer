@@ -12,6 +12,7 @@ class Hydrus:
     def __init__(self, access_key: str, api_url: str):
         self.client = hydrus_api.Client(access_key=access_key, api_url=api_url)
         self.logger = logging.getLogger(__name__)
+        self.tags = None
 
         if not hydrus_api.utils.verify_permissions(self.client, REQUIRED_PERMISSIONS):
             self.logger.error("The API key does not grant all required permissions:", REQUIRED_PERMISSIONS)
@@ -93,9 +94,10 @@ class Hydrus:
         tag_counts = Counter(tag_cloud)
         sorted_tags = sorted(tag_counts.items(), key=lambda item: item[1], reverse=True)
         
-        self.logger.info(f"Got {len(sorted_tags)} tags")
+        self.tags = sorted_tags
+        self.logger.info(f"Got {len(self.tags)} tags")
 
-        return sorted_tags
+        return self.tags
 
     def get_metadata(self, file_id):
         try:
@@ -109,6 +111,30 @@ class Hydrus:
         try:
             res = self.client.add_url(url)
             return res["human_result_text"]
+        except hydrus_api.APIError as e:
+            self.logger.error(e)
+            return str(e)
+    
+    def move_to_archive(self):
+        file_ids = self.client.search_files(["system:inbox"], return_hashes=True)
+        hashes = file_ids["hashes"]
+        if len(hashes) > 0:
+            self.client.archive_files(hashes=hashes)
+           
+        return len(hashes)
+
+    def get_metrics(self):
+        try:
+            api_version = self.client.get_api_version()
+
+            reply = {
+                "hydrus_up": 1,
+                "hydrus_api_version": api_version['version'],
+                "hydrus_version": api_version['hydrus_version'],
+                "hydrus_files": len(self.client.search_files(["system:everything"])['file_ids']),
+                "hydrus_tags": len(self.tags),
+            }
+            return reply
         except hydrus_api.APIError as e:
             self.logger.error(e)
             return str(e)

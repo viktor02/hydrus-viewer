@@ -12,7 +12,7 @@ from .hydrus import Hydrus
 
 app = Flask(__name__)
 
-version = '0.4.0'
+version = '0.4.1'
 
 parser = argparse.ArgumentParser(prog='hydrus-viewer')
 parser.add_argument('access_key')
@@ -141,6 +141,19 @@ def predict_tag():
         logger.error(f"Error while predicting tag: {e}")
         abort(500)
 
+@app.route("/archive_files")
+def trigger_archive_files():
+    count = hydrus.move_to_archive()
+    return f"Archived {count}"
+
+@app.route("/metrics")
+def metrics():
+    metrics = hydrus.get_metrics()
+
+    reply = ""
+    for metric, status in metrics.items():
+        reply += f"{metric} {status} <br>"
+    return reply
 
 @app.errorhandler(403)
 def page_not_found(error):
