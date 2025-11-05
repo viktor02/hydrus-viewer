@@ -51,6 +51,8 @@
                 <dd id="fileSize">{{ metadata["size"] }}</dd>
                 <dt>Audio</dt>
                 <dd>{{ metadata["has_audio"] }} </dd>
+                <dt>Actions</dt>
+                <dd><a href="{{ url_for('delete_file', hash=metadata['hash']) }}">Delete file</a></dd>
             </dl>
         </div>
     </div>

@@ -146,6 +146,11 @@ def trigger_archive_files():
     count = hydrus.move_to_archive()
     return f"Archived {count}"
 
+@app.route("/delete_file/<hash>")
+def delete_file(hash):
+    count = hydrus.delete_file(hash=hash)
+    return f"Deleted {count}"
+
 @app.route("/metrics")
 def metrics():
     metrics = hydrus.get_metrics()

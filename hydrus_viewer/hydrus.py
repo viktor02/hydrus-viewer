@@ -114,14 +114,25 @@ class Hydrus:
         except hydrus_api.APIError as e:
             self.logger.error(e)
             return str(e)
+
+    def delete_file(self, hash):
+        try:
+            res = self.client.delete_files(hashes=[hash])
+            return res
+        except hydrus_api.APIError as e:
+            self.logger.error(e)
+            return str(e)
     
     def move_to_archive(self):
-        file_ids = self.client.search_files(["system:inbox"], return_hashes=True)
-        hashes = file_ids["hashes"]
-        if len(hashes) > 0:
-            self.client.archive_files(hashes=hashes)
-           
-        return len(hashes)
+        try:
+            file_ids = self.client.search_files(["system:inbox"], return_hashes=True)
+            hashes = file_ids["hashes"]
+            if len(hashes) > 0:
+                self.client.archive_files(hashes=hashes)
+            return len(hashes)
+        except hydrus_api.APIError as e:
+            self.logger.error(e)
+            return str(e)
 
     def get_metrics(self):
         try:
@@ -131,7 +142,8 @@ class Hydrus:
                 "hydrus_up": 1,
                 "hydrus_api_version": api_version['version'],
                 "hydrus_version": api_version['hydrus_version'],
-                "hydrus_files": len(self.client.search_files(["system:everything"])['file_ids']),
+                "hydrus_all_files": len(self.client.search_files(["system:everything"])['file_ids']),
+                "hydrus_inbox_files": len(self.client.search_files(["system:inbox"])['file_ids']),
                 "hydrus_tags": len(self.tags),
             }
             return reply
